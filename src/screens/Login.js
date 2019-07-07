@@ -27,11 +27,19 @@ import { login } from '../store/actions/user'
        email: '',
        password: '' 
     }
+
+    // O componete acabou de ser atualizado
+    componentDidUpdate = prevProps =>  {
+        if (prevProps.isLoading && !this.props.isLoading) {
+            this.props.navigation.navigate('Profile')
+        }
+
+    }
   
     
     login = () => {
        this.props.onLogin({ ...this.state }) 
-       this.props.navigation.navigate('Profile');
+       // this.props.navigation.navigate('Profile');
     //    this.keyLogin.startLoginProcess(config).then(tokens => {
     //        console.log(tokens);
     }
@@ -92,6 +100,11 @@ const styles = StyleSheet.create({
        paddingLeft: 15  
     }
 })
+const mapStateToProps = ({ user }) => {
+    return {
+        isLoading: user.isLoading  
+    }
+}
 
 const mapDispatchToProps = dispatch => {
     return {
@@ -100,4 +113,4 @@ const mapDispatchToProps = dispatch => {
 }
 
 //Connect -> conecta meu componente Login com redux
-export default connect(null,mapDispatchToProps)(Login)
+export default connect(mapStateToProps,mapDispatchToProps)(Login)

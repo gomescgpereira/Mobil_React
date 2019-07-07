@@ -7,12 +7,15 @@ import { createStore,
 import  thunk from 'redux-thunk'
 import useReducer from './reducers/user'
 import postsReducer from './reducers/post'
+import messageReducer from './reducers/message'
 
 //Para a gente defenir storage de nossa aplicação
 
 const reducers = combineReducers({
     user: useReducer,
-    posts: postsReducer 
+    posts: postsReducer,
+    message: messageReducer
+
 })
 
 // A partie dai em qualquer ligar do meu aplicativo usando chave "user" e terei acesso

@@ -4,7 +4,7 @@ import  axios  from 'axios'
 
 export const addPost = post => {
      return dispatch => {
-       dispatch( creatingPost())
+       dispatch(creatingPost())
        axios({
            url: 'uploadImage',
            baseURL: 'https://us-central1-lambe-244a8.cloudfunctions.net',
@@ -36,10 +36,23 @@ export const addPost = post => {
 }
 
 export const addComment = payload => {
-    return {
-        type: ADD_COMMENT,
-        payload: payload
+    return dispatch => {
+        axios.get(`/posts/${payload.postId}.json`)
+        .catch(err => console.log(err))
+        .then(res => {
+            const comments = res.data.comments || []
+            comments.push(payload.comment)
+            axios.patch(`/posts/${payload.postId}.json`, {comments})
+            .catch(err => console.log(err))
+            .then(res => {
+                dispatch(fetchPosts())
+            })
+        })
     }
+    // return {
+    //     type: ADD_COMMENT,
+    //     payload: payload
+    // }
 }
 // Action CREATE
 export const setPosts = posts => {

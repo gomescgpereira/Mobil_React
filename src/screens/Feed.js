@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { StyleSheet, FlatList, View } from 'react-native'
 import Header from '../components/Header'
 import Post from '../components/Post'
-import { getPosts } from '../store/actions/post'
+import { fetchPosts } from '../store/actions/post'
 
 class Feed extends Component {
     // metodo ciclo de vida componente
@@ -42,7 +42,7 @@ const mapStateToProps = ({ posts } ) => {
 
 const mapDispatchToProps =  dispatch => {
     return  {
-        onFetchPosts: () =>  dispatch(getPosts())
+        onFetchPosts: () =>  dispatch(fetchPosts())
     }
 }
 

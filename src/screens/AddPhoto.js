@@ -30,9 +30,11 @@ class AddPhoto extends Component {
             image: null,
             comment: '',
           })
+          
+          this.props.navigation.navigate('Feed')
         }
         
-         this.props.navigation.navigate('Feed')
+         
     }
 
     pickImage = () => {
@@ -146,7 +148,7 @@ const mapStateToProps = ({ user, posts }) => {
   return {
     email: user.email,
     name: user.name,
-    loading: posts.isUploading
+    loandig: posts.isUploading
     
   }
 }
