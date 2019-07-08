@@ -1,9 +1,11 @@
 import { SET_POSTS, ADD_COMMENT, 
      CREATING_POST, POST_CREATED } from './actionTypes'
+import { SetMessage } from './message'     
+
 import  axios  from 'axios'
 
 export const addPost = post => {
-     return dispatch => {
+     return (dispatch, getState) => {
        dispatch(creatingPost())
        axios({
            url: 'uploadImage',
@@ -16,11 +18,20 @@ export const addPost = post => {
        .catch (err => console.log(err))
        .then(resp => {
          post.image  = resp.data.imageUrl
-         axios.post('/posts.json', { ...post })
-         .catch(err => console.log(err))
+         axios.post(`/posts.json?auth=${getState().user.token}`, { ...post })
+         .catch(err => {
+             dispatch(SetMessage({
+                title: 'Erro',
+                text: 'Ocorreu um erro inesperado'
+             }))
+         })
          .then(res => {
              dispatch(fetchPosts())
              dispatch(postCreated())
+             dispatch(SetMessage({
+                 title: 'Sucesso',
+                 text: 'Outra Postagem!'
+             }))
          })
        })
         // axios.post('/posts.json', { ...post })
@@ -36,13 +47,13 @@ export const addPost = post => {
 }
 
 export const addComment = payload => {
-    return dispatch => {
+    return (dispatch, getState) => {
         axios.get(`/posts/${payload.postId}.json`)
         .catch(err => console.log(err))
         .then(res => {
             const comments = res.data.comments || []
             comments.push(payload.comment)
-            axios.patch(`/posts/${payload.postId}.json`, {comments})
+            axios.patch(`/posts/${payload.postId}.json?auth=${getState().user.token}`, {comments})
             .catch(err => console.log(err))
             .then(res => {
                 dispatch(fetchPosts())

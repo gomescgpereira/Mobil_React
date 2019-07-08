@@ -1,6 +1,7 @@
 import {USER_LOGGED_IN, USER_LOGGED_OUT,LOADING_USER , USER_LOADED } from './actionTypes'
 import axios  from 'axios'
-
+import { SET_MESSAGE } from '../actions/actionTypes'
+import { SetMessage } from './message';
 
 const authBaseURL = 'https://www.googleapis.com/identitytoolkit/v3/relyingparty'
 const API_KEY = 'AIzaSyCiTc5VHO1qUUT4o0j1jFpAQfHIWVFAaZs'
@@ -41,7 +42,7 @@ export const createUser = (user) => {
                 })
                 .catch(err => console.log(err))
                 .then( res => {
-                    console.log('Usuario criado com sucesso')
+                   dispatch(login(user))
                 })
             }
         })
@@ -73,11 +74,18 @@ export const login = user => {
         .catch(err => console.log(err))
         .then( res => {
             if (res.data.localId) {
+                user.token = res.data.idToken
                 // Pegar na base o nome do usuario
                 axios.get(`/users/${res.data.localId}.json`)
-                .catch(err => console.log(err))
+                .catch(err =>  {
+                    dispatch(SetMessage({
+                        title: 'Erro',
+                        text: 'Ocorreu um erro inesperado!'
+                    }))
+                })
                 .then( res => {
-                    user.password = null,
+                    delete user.password
+                    user.id = res.data.localId
                     user.name = res.data.name
                     dispatch(userLogged(user))
                     // Usuario Carregado

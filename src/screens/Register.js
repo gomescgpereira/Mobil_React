@@ -15,6 +15,19 @@ class Register extends Component {
         email: '',
         password: '' 
      }
+
+     componentDidUpdate = prevProps =>  {
+        if (prevProps.isLoading && !this.props.isLoading) {
+           this.setState({
+               name: '',
+               email: '',
+           password: '' 
+        })
+                
+            this.props.navigation.navigate('Profile')
+        }
+
+    }
      
 
      render() {
@@ -73,11 +86,20 @@ const styles = StyleSheet.create({
     
 })
 
-const mapispatchToProps = dispatch => {
+const mapDispatchToProps = dispatch => {
     return {
         onCreateUser:  user => dispatch(createUser(user))
     }
 }
 
-export default connect(null, mapispatchToProps)(Register)
+
+const mapStateToProps = ({ user }) => {
+    return {
+        isLoading: user.isLoading  
+    }
+}
+
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(Register)
 //export default Register
